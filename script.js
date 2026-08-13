@@ -341,7 +341,10 @@ function startBikeRide() {
     }
 
     bikeMarker.setLatLng(points[index]);
+const progress =
+  (index / (points.length - 1)) * 100;
 
+updateProgress(progress);
   }, speed);
 
 }
