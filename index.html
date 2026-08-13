@@ -22,7 +22,44 @@
     <h2>🏍️ Bike Taxi</h2>
     <p id="status">Pickup location select करें</p>
   </div>
+<div class="ride-card" id="rideCard">
 
+  <div class="ride-header">
+    <span>🚕 New Ride</span>
+    <span id="rideStatus">Waiting</span>
+  </div>
+
+  <div class="passenger">
+    <div class="passenger-avatar">👤</div>
+
+    <div>
+      <h3>Rahul</h3>
+      <p>⭐ 4.8 • Passenger</p>
+    </div>
+  </div>
+
+  <div class="ride-info">
+    <div>
+      <small>Distance</small>
+      <strong id="distanceText">-- km</strong>
+    </div>
+
+    <div>
+      <small>Fare</small>
+      <strong id="fareText">₹--</strong>
+    </div>
+
+    <div>
+      <small>Time</small>
+      <strong id="timeText">-- min</strong>
+    </div>
+  </div>
+
+  <button id="acceptRideBtn">
+    ✅ Accept Ride
+  </button>
+
+</div>
   <div class="bottom-panel">
     <button id="pickupBtn">📍 Set Pickup</button>
     <button id="destinationBtn">🏁 Set Destination</button>
