@@ -401,3 +401,125 @@ acceptRideBtn.addEventListener("click", function () {
 
   startRideBtn.disabled = false;
 });
+// ===============================
+// STEP 7 - WALLET & PROGRESS
+// ===============================
+
+const progressFill =
+  document.getElementById("progressFill");
+
+const progressPercent =
+  document.getElementById("progressPercent");
+
+const walletAmount =
+  document.getElementById("walletAmount");
+
+const nextRideBtn =
+  document.getElementById("nextRideBtn");
+
+let wallet = 0;
+let currentFare = 0;
+
+
+// Update wallet display
+function updateWallet() {
+  walletAmount.innerText = wallet.toFixed(0);
+}
+
+
+// Set fare from route
+function setRideFare(fare) {
+
+  currentFare = Number(fare);
+
+  fareText.innerText =
+    `₹${currentFare}`;
+
+}
+
+
+// Update ride progress
+function updateProgress(percent) {
+
+  percent = Math.min(100, Math.max(0, percent));
+
+  progressFill.style.width =
+    `${percent}%`;
+
+  progressPercent.innerText =
+    `${Math.round(percent)}%`;
+
+}
+
+
+// Complete ride
+function completeRide() {
+
+  clearInterval(bikeAnimation);
+
+  updateProgress(100);
+
+  wallet += currentFare;
+
+  updateWallet();
+
+  rideStatus.innerText =
+    "Completed 🎉";
+
+  document.getElementById("status").innerText =
+    `🎉 Ride completed! ₹${currentFare} wallet में add हुए।`;
+
+  acceptRideBtn.hidden = true;
+
+  nextRideBtn.hidden = false;
+
+}
+
+
+// Next ride
+nextRideBtn.addEventListener("click", function () {
+
+  if (bikeMarker) {
+    map.removeLayer(bikeMarker);
+    bikeMarker = null;
+  }
+
+  if (routeLine) {
+    map.removeLayer(routeLine);
+    routeLine = null;
+  }
+
+  if (pickupMarker) {
+    map.removeLayer(pickupMarker);
+    pickupMarker = null;
+  }
+
+  if (destinationMarker) {
+    map.removeLayer(destinationMarker);
+    destinationMarker = null;
+  }
+
+  rideAccepted = false;
+
+  acceptRideBtn.hidden = false;
+  acceptRideBtn.disabled = false;
+  acceptRideBtn.innerText = "✅ Accept Ride";
+
+  nextRideBtn.hidden = true;
+
+  rideStatus.innerText = "Waiting";
+
+  distanceText.innerText = "-- km";
+  fareText.innerText = "₹--";
+  timeText.innerText = "-- min";
+
+  updateProgress(0);
+
+  startRideBtn.disabled = true;
+
+  currentMode = "pickup";
+
+  document.getElementById("status").innerText =
+    "नई ride के लिए Pickup location चुनें 📍";
+
+});
