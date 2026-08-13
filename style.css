@@ -223,3 +223,12 @@ body {
   font-size: 15px;
   font-weight: bold;
 }
+.bike-player {
+  font-size: 32px;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 3px 3px rgba(0,0,0,0.35));
+}
