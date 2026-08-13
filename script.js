@@ -256,3 +256,97 @@ async function createRoute() {
   }
 
 }
+// ===============================
+// STEP 5 - BIKE MOVEMENT
+// ===============================
+
+let bikeMarker = null;
+let bikeAnimation = null;
+
+const startRideBtn =
+  document.getElementById("startRideBtn");
+
+
+// Bike icon
+const bikeIcon = L.divIcon({
+  className: "bike-marker",
+  html: "🏍️",
+  iconSize: [40, 40],
+  iconAnchor: [20, 20]
+});
+
+
+// Enable Start Ride after route is ready
+function enableStartRide() {
+  startRideBtn.disabled = false;
+}
+
+
+// Start Ride button
+startRideBtn.addEventListener("click", function () {
+
+  if (!routeLine) {
+    return;
+  }
+
+  startRideBtn.disabled = true;
+
+  document.getElementById("status").innerText =
+    "🏍️ Ride started...";
+
+  startBikeRide();
+});
+
+
+// Start bike animation
+function startBikeRide() {
+
+  const points = routeLine.getLatLngs();
+
+  if (!points || points.length < 2) {
+    return;
+  }
+
+  // Remove old bike
+  if (bikeMarker) {
+    map.removeLayer(bikeMarker);
+  }
+
+  // Put bike at pickup
+  bikeMarker = L.marker(
+    points[0],
+    {
+      icon: bikeIcon,
+      zIndexOffset: 1000
+    }
+  ).addTo(map);
+
+
+  let index = 0;
+
+  const speed = 80; // milliseconds
+
+  bikeAnimation = setInterval(function () {
+
+    index++;
+
+    if (index >= points.length) {
+
+      clearInterval(bikeAnimation);
+
+      bikeMarker.setLatLng(points[points.length - 1]);
+
+      document.getElementById("status").innerText =
+        "🎉 Ride completed! Passenger destination पर पहुंच गया।";
+
+      startRideBtn.disabled = false;
+
+      return;
+    }
+
+
+    bikeMarker.setLatLng(points[index]);
+
+  }, speed);
+
+}
