@@ -465,7 +465,6 @@ function updateProgress(percent) {
 // Complete ride
 function completeRide() {
 
-  clearInterval(bikeAnimation);
 
   updateProgress(100);
 
