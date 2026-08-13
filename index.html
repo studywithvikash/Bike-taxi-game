@@ -58,7 +58,24 @@
   <button id="acceptRideBtn">
     ✅ Accept Ride
   </button>
+<div class="progress-box">
+  <div class="progress-text">
+    <span>Ride Progress</span>
+    <strong id="progressPercent">0%</strong>
+  </div>
 
+  <div class="progress-bar">
+    <div id="progressFill"></div>
+  </div>
+</div>
+
+<div class="wallet">
+  💰 Wallet: ₹<span id="walletAmount">0</span>
+</div>
+
+<button id="nextRideBtn" class="next-ride-btn" hidden>
+  🔄 Next Ride
+</button>
 </div>
   <div class="bottom-panel">
     <button id="pickupBtn">📍 Set Pickup</button>
