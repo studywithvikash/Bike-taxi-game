@@ -82,3 +82,11 @@ body {
     padding: 14px 6px;
   }
 }
+#startRideBtn {
+  background: #0a8f3d;
+}
+
+#startRideBtn:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
