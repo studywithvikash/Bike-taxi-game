@@ -528,7 +528,7 @@ function startBikeRide() {
 
   // SPEED
 
-  const speed = 0.025;
+  const speed = 0.018;
 
 
   function animateBike() {
@@ -541,7 +541,14 @@ function startBikeRide() {
       bikeMarker.setLatLng(
         points[points.length - 1]
       );
-
+// Camera follows the bike
+map.panTo(
+  [lat, lng],
+  {
+    animate: true,
+    duration: 0.15
+  }
+);
 
       updateProgress(100);
 
