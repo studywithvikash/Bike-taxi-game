@@ -243,6 +243,7 @@ async function createRoute() {
 
     document.getElementById("status").innerText =
       `Route ready 🛣️ ${distanceKm} km • ${durationMin} min • ₹${fare}`;
+    enableStartRide();
 
   }
 
