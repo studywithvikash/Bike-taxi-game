@@ -333,18 +333,12 @@ function startBikeRide() {
 
     if (index >= points.length) {
 
-      clearInterval(bikeAnimation);
+  bikeMarker.setLatLng(points[points.length - 1]);
 
-      bikeMarker.setLatLng(points[points.length - 1]);
+  completeRide();
 
-      document.getElementById("status").innerText =
-        "🎉 Ride completed! Passenger destination पर पहुंच गया।";
-
-      startRideBtn.disabled = false;
-
-      return;
+  return;
     }
-
 
     bikeMarker.setLatLng(points[index]);
 
