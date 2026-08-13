@@ -308,45 +308,58 @@ function startBikeRide() {
     return;
   }
 
-  // Remove old bike
   if (bikeMarker) {
     map.removeLayer(bikeMarker);
   }
 
-  // Put bike at pickup
-  bikeMarker = L.marker(
-    points[0],
-    {
-      icon: bikeIcon,
-      zIndexOffset: 1000
-    }
-  ).addTo(map);
+  bikeMarker = L.marker(points[0], {
+    icon: bikeIcon,
+    zIndexOffset: 1000
+  }).addTo(map);
 
+  let segment = 0;
+  let progress = 0;
 
-  let index = 0;
+  const speed = 0.03;
 
-  const speed = 80; // milliseconds
+  function animateBike() {
 
-  bikeAnimation = setInterval(function () {
+    if (segment >= points.length - 1) {
+      bikeMarker.setLatLng(points[points.length - 1]);
 
-    index++;
-
-    if (index >= points.length) {
-
-  bikeMarker.setLatLng(points[points.length - 1]);
-
-  completeRide();
-
-  return;
+      completeRide();
+      return;
     }
 
-    bikeMarker.setLatLng(points[index]);
-const progress =
-  (index / (points.length - 1)) * 100;
+    const start = points[segment];
+    const end = points[segment + 1];
 
-updateProgress(progress);
-  }, speed);
+    progress += speed;
 
+    if (progress >= 1) {
+      progress = 0;
+      segment++;
+    }
+
+    const lat =
+      start.lat + (end.lat - start.lat) * progress;
+
+    const lng =
+      start.lng + (end.lng - start.lng) * progress;
+
+    bikeMarker.setLatLng([lat, lng]);
+
+    const totalProgress =
+      ((segment + progress) / (points.length - 1)) * 100;
+
+    updateProgress(totalProgress);
+
+    bikeAnimation =
+      requestAnimationFrame(animateBike);
+  }
+
+  animateBike();
+}
 }
 // ===============================
 // STEP 6 - RIDE SYSTEM
