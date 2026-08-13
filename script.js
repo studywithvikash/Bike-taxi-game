@@ -64,9 +64,13 @@ const destinationIcon = L.divIcon({
 
 const bikeIcon = L.divIcon({
   className: "bike-marker",
-  html: "🏍️",
-  iconSize: [40, 40],
-  iconAnchor: [20, 20]
+  html: `
+    <div class="bike-player">
+      🏍️
+    </div>
+  `,
+  iconSize: [45, 45],
+  iconAnchor: [22, 22]
 });
 
 
