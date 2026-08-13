@@ -588,7 +588,25 @@ function startBikeRide() {
     bikeMarker.setLatLng(
       [lat, lng]
     );
+// -------------------------------
+// BIKE DIRECTION / ROTATION
+// -------------------------------
 
+const angle =
+  Math.atan2(
+    end.lng - start.lng,
+    end.lat - start.lat
+  ) * (180 / Math.PI);
+
+const bikeElement =
+  bikeMarker.getElement();
+
+if (bikeElement) {
+
+  bikeElement.style.transform =
+    `rotate(${angle}deg)`;
+
+}
 
     // PROGRESS
 
