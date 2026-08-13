@@ -351,3 +351,53 @@ function startBikeRide() {
   }, speed);
 
 }
+// ===============================
+// STEP 6 - RIDE SYSTEM
+// ===============================
+
+const rideCard =
+  document.getElementById("rideCard");
+
+const acceptRideBtn =
+  document.getElementById("acceptRideBtn");
+
+const rideStatus =
+  document.getElementById("rideStatus");
+
+const distanceText =
+  document.getElementById("distanceText");
+
+const fareText =
+  document.getElementById("fareText");
+
+const timeText =
+  document.getElementById("timeText");
+
+let rideAccepted = false;
+
+
+// Accept Ride
+acceptRideBtn.addEventListener("click", function () {
+
+  if (!routeLine) {
+
+    document.getElementById("status").innerText =
+      "पहले Pickup और Destination select करें 📍";
+
+    return;
+  }
+
+  rideAccepted = true;
+
+  rideStatus.innerText = "Accepted ✅";
+
+  acceptRideBtn.innerText =
+    "🏍️ Ride Accepted";
+
+  acceptRideBtn.disabled = true;
+
+  document.getElementById("status").innerText =
+    "Passenger ने ride accept कर ली ✅";
+
+  startRideBtn.disabled = false;
+});
