@@ -488,56 +488,128 @@ startRideBtn.addEventListener(
 // SMOOTH BIKE MOVEMENT
 // -------------------------------
 
+
 function startBikeRide() {
 
-  const points =
-    routeLine.getLatLngs();
+  const points = routeLine.getLatLngs();
 
-
-  if (
-    !points ||
-    points.length < 2
-  ) {
-
-    status.innerText =
-      "Bike route नहीं मिला ❌";
-
+  if (!points || points.length < 2) {
+    status.innerText = "Bike route नहीं मिला ❌";
     return;
   }
 
-
-  // REMOVE OLD BIKE
-
   if (bikeMarker) {
-
-    map.removeLayer(
-      bikeMarker
-    );
-
+    map.removeLayer(bikeMarker);
   }
 
-
-  // CREATE BIKE
-
-  bikeMarker =
-    L.marker(
-      points[0],
-      {
-        icon: bikeIcon,
-        zIndexOffset: 1000
-      }
-    ).addTo(map);
-
+  bikeMarker = L.marker(points[0], {
+    icon: bikeIcon,
+    zIndexOffset: 1000
+  }).addTo(map);
 
   let segment = 0;
-
   let progress = 0;
-
-
-  // BIKE SPEED
 
   const baseSpeed = 0.02;
 
+  function animateBike() {
+
+    if (segment >= points.length - 1) {
+
+      bikeMarker.setLatLng(
+        points[points.length - 1]
+      );
+
+      updateProgress(100);
+      completeRide();
+
+      return;
+    }
+
+    const start = points[segment];
+    const end = points[segment + 1];
+
+    // -----------------------------
+    // SPEED CONTROL
+    // -----------------------------
+
+    progress += baseSpeed * bikeSpeed;
+
+    if (progress >= 1) {
+      progress = 0;
+      segment++;
+    }
+
+    // -----------------------------
+    // POSITION
+    // -----------------------------
+
+    const lat =
+      start.lat +
+      (end.lat - start.lat) * progress;
+
+    const lng =
+      start.lng +
+      (end.lng - start.lng) * progress;
+
+    bikeMarker.setLatLng([lat, lng]);
+
+    // -----------------------------
+    // CAMERA
+    // -----------------------------
+
+    map.panTo(
+      [lat, lng],
+      {
+        animate: false
+      }
+    );
+
+    // -----------------------------
+    // PROGRESS
+    // -----------------------------
+
+    const totalProgress =
+      (
+        (segment + progress) /
+        (points.length - 1)
+      ) * 100;
+
+    updateProgress(totalProgress);
+
+    // -----------------------------
+    // STEERING VISUAL
+    // -----------------------------
+
+    if (steeringDirection !== 0) {
+
+      const bikeElement =
+        bikeMarker.getElement();
+
+      if (bikeElement) {
+
+        const bikePlayer =
+          bikeElement.querySelector(
+            ".bike-player"
+          );
+
+        if (bikePlayer) {
+
+          bikePlayer.style.transform =
+            `rotate(${steeringDirection * 12}deg)`;
+
+        }
+      }
+    }
+
+    bikeAnimation =
+      requestAnimationFrame(
+        animateBike
+      );
+  }
+
+  animateBike();
+}
 
   function animateBike() {
 
