@@ -567,7 +567,7 @@ function startBikeRide() {
       points[segment + 1];
 
 
-    progress += speed;
+    progress += baseSpeed * bikeSpeed;
 
 
     if (progress >= 1) {
