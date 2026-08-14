@@ -845,3 +845,73 @@ nextRideBtn.addEventListener(
 
   }
 );
+// ==========================================
+// STEP 11 - BIKE CONTROLS
+// ==========================================
+
+const accelerateBtn =
+  document.getElementById("accelerateBtn");
+
+const brakeBtn =
+  document.getElementById("brakeBtn");
+
+const leftBtn =
+  document.getElementById("leftBtn");
+
+const rightBtn =
+  document.getElementById("rightBtn");
+
+let bikeSpeed = 1;
+let steeringDirection = 0;
+
+
+// ACCELERATE
+accelerateBtn.addEventListener("pointerdown", function () {
+  bikeSpeed = 1.8;
+});
+
+accelerateBtn.addEventListener("pointerup", function () {
+  bikeSpeed = 1;
+});
+
+accelerateBtn.addEventListener("pointercancel", function () {
+  bikeSpeed = 1;
+});
+
+
+// BRAKE
+brakeBtn.addEventListener("pointerdown", function () {
+  bikeSpeed = 0.2;
+});
+
+brakeBtn.addEventListener("pointerup", function () {
+  bikeSpeed = 1;
+});
+
+brakeBtn.addEventListener("pointercancel", function () {
+  bikeSpeed = 1;
+});
+
+
+// LEFT
+leftBtn.addEventListener("pointerdown", function () {
+  steeringDirection = -1;
+});
+
+leftBtn.addEventListener("pointerup", function () {
+  steeringDirection = 0;
+});
+
+leftBtn.addEventListener("pointercancel", function () {
+  steeringDirection = 0;
+});
+
+
+// RIGHT
+rightBtn.addEventListener("pointerdown", function () {
+  steeringDirection = 1;
+});
+
+rightBtn.addEventListener("pointerup", function () {
+  steeringDirection = 0;
+});
