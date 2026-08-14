@@ -265,3 +265,15 @@ body {
 .driving-controls button:active {
   transform: scale(0.9);
 }
+.bike-player {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 30px;
+
+  transition: transform 0.12s ease;
+}
