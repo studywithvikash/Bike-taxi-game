@@ -232,3 +232,36 @@ body {
   justify-content: center;
   filter: drop-shadow(0 3px 3px rgba(0,0,0,0.35));
 }
+.driving-controls {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1100;
+
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.driving-controls button {
+  width: 58px;
+  height: 58px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: white;
+  color: #111;
+
+  font-size: 22px;
+  font-weight: bold;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+
+  cursor: pointer;
+}
+
+.driving-controls button:active {
+  transform: scale(0.9);
+}
