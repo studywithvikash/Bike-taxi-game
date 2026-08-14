@@ -536,7 +536,7 @@ function startBikeRide() {
 
   // BIKE SPEED
 
-  const speed = 0.02;
+  const baseSpeed = 0.02;
 
 
   function animateBike() {
