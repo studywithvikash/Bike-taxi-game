@@ -8,7 +8,6 @@
 // -------------------------------
 
 let map;
-
 let pickupMarker = null;
 let destinationMarker = null;
 let routeLine = null;
@@ -36,8 +35,7 @@ L.tileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   {
     maxZoom: 19,
-    attribution:
-      "&copy; OpenStreetMap contributors"
+    attribution: "&copy; OpenStreetMap contributors"
   }
 ).addTo(map);
 
@@ -53,7 +51,6 @@ const pickupIcon = L.divIcon({
   iconAnchor: [17, 35]
 });
 
-
 const destinationIcon = L.divIcon({
   className: "custom-marker",
   html: "🏁",
@@ -61,16 +58,11 @@ const destinationIcon = L.divIcon({
   iconAnchor: [17, 35]
 });
 
-
 const bikeIcon = L.divIcon({
   className: "bike-marker",
-  html: `
-    <div class="bike-player">
-      🏍️
-    </div>
-  `,
-  iconSize: [45, 45],
-  iconAnchor: [22, 22]
+  html: "🏍️",
+  iconSize: [40, 40],
+  iconAnchor: [20, 20]
 });
 
 
@@ -119,6 +111,17 @@ const nextRideBtn =
 
 
 // -------------------------------
+// INITIAL UI
+// -------------------------------
+
+acceptRideBtn.disabled = true;
+startRideBtn.disabled = true;
+nextRideBtn.hidden = true;
+
+walletAmount.innerText = "0";
+
+
+// -------------------------------
 // MAP CLICK
 // -------------------------------
 
@@ -142,7 +145,7 @@ map.on("click", function (e) {
       }
     )
       .addTo(map)
-      .bindPopup("📍 Pickup")
+      .bindPopup("📍 Pickup Location")
       .openPopup();
 
     status.innerText =
@@ -194,6 +197,7 @@ pickupBtn.addEventListener(
 
     status.innerText =
       "Map पर Pickup location चुनें 📍";
+
   }
 );
 
@@ -218,12 +222,13 @@ destinationBtn.addEventListener(
 
     status.innerText =
       "Map पर Destination चुनें 🏁";
+
   }
 );
 
 
 // -------------------------------
-// CREATE ROUTE
+// CREATE ROAD ROUTE
 // -------------------------------
 
 async function createRoute() {
@@ -270,7 +275,7 @@ async function createRoute() {
     if (
       data.code !== "Ok" ||
       !data.routes ||
-      !data.routes.length
+      data.routes.length === 0
     ) {
 
       status.innerText =
@@ -318,7 +323,7 @@ async function createRoute() {
       ).addTo(map);
 
 
-    // ZOOM
+    // FIT ROUTE
 
     map.fitBounds(
       routeLine.getBounds(),
@@ -356,42 +361,35 @@ async function createRoute() {
     currentFare = fare;
 
 
-    // UPDATE UI
+    // UPDATE RIDE CARD
 
     distanceText.innerText =
-      distanceKm.toFixed(2) +
-      " km";
-
+      distanceKm.toFixed(2) + " km";
 
     timeText.innerText =
-      durationMin +
-      " min";
-
+      durationMin + " min";
 
     fareText.innerText =
       "₹" + fare;
 
 
-    status.innerText =
-      `Route ready 🛣️ ${distanceKm.toFixed(2)} km • ${durationMin} min • ₹${fare}`;
-
-
-    // ACCEPT RIDE ENABLE
+    // ENABLE ACCEPT
 
     acceptRideBtn.disabled = false;
 
 
-    // START RIDE DISABLED
-    // Until passenger accepts
-
     startRideBtn.disabled = true;
+
+
+    status.innerText =
+      `Route ready 🛣️ ${distanceKm.toFixed(2)} km • ${durationMin} min • ₹${fare}`;
 
   }
 
   catch (error) {
 
     console.error(
-      "Route Error:",
+      "Routing Error:",
       error
     );
 
@@ -414,7 +412,7 @@ acceptRideBtn.addEventListener(
     if (!routeLine) {
 
       status.innerText =
-        "पहले Pickup और Destination चुनें 📍";
+        "पहले route बनाएं 🛣️";
 
       return;
     }
@@ -440,7 +438,7 @@ acceptRideBtn.addEventListener(
 
 
     status.innerText =
-      "Passenger ने ride accept कर ली ✅ अब Start Ride दबाएँ";
+      "Passenger ने ride accept कर ली ✅";
 
   }
 );
@@ -487,7 +485,7 @@ startRideBtn.addEventListener(
 
 
 // -------------------------------
-// BIKE MOVEMENT
+// SMOOTH BIKE MOVEMENT
 // -------------------------------
 
 function startBikeRide() {
@@ -500,6 +498,7 @@ function startBikeRide() {
     !points ||
     points.length < 2
   ) {
+
     status.innerText =
       "Bike route नहीं मिला ❌";
 
@@ -510,7 +509,11 @@ function startBikeRide() {
   // REMOVE OLD BIKE
 
   if (bikeMarker) {
-    map.removeLayer(bikeMarker);
+
+    map.removeLayer(
+      bikeMarker
+    );
+
   }
 
 
@@ -527,15 +530,18 @@ function startBikeRide() {
 
 
   let segment = 0;
+
   let progress = 0;
 
 
-  // SPEED
+  // BIKE SPEED
 
-  const speed = 0.018;
+  const speed = 0.02;
 
 
   function animateBike() {
+
+    // DESTINATION REACHED
 
     if (
       segment >=
@@ -545,17 +551,8 @@ function startBikeRide() {
       bikeMarker.setLatLng(
         points[points.length - 1]
       );
-// Camera follows the bike
-map.panTo(
-  [lat, lng],
-  {
-    animate: true,
-    duration: 0.15
-  }
-);
 
       updateProgress(100);
-
 
       completeRide();
 
@@ -582,42 +579,40 @@ map.panTo(
     }
 
 
-    // INTERPOLATION
+    // EXACT ROUTE INTERPOLATION
 
     const lat =
       start.lat +
-      (end.lat - start.lat) *
-      progress;
+      (
+        end.lat -
+        start.lat
+      ) * progress;
 
 
     const lng =
       start.lng +
-      (end.lng - start.lng) *
-      progress;
+      (
+        end.lng -
+        start.lng
+      ) * progress;
 
+
+    // MOVE BIKE
 
     bikeMarker.setLatLng(
       [lat, lng]
     );
-// -------------------------------
-// BIKE DIRECTION / ROTATION
-// -------------------------------
 
-const angle =
-  Math.atan2(
-    end.lng - start.lng,
-    end.lat - start.lat
-  ) * (180 / Math.PI);
 
-const bikeElement =
-  bikeMarker.getElement();
+    // CAMERA FOLLOW
 
-if (bikeElement) {
+    map.panTo(
+      [lat, lng],
+      {
+        animate: false
+      }
+    );
 
-  bikeElement.style.transform =
-    `rotate(${angle}deg)`;
-
-}
 
     // PROGRESS
 
@@ -632,6 +627,8 @@ if (bikeElement) {
       totalProgress
     );
 
+
+    // NEXT FRAME
 
     bikeAnimation =
       requestAnimationFrame(
@@ -694,7 +691,8 @@ function completeRide() {
   wallet += currentFare;
 
 
-  updateWallet();
+  walletAmount.innerText =
+    wallet.toFixed(0);
 
 
   rideStatus.innerText =
@@ -720,21 +718,6 @@ function completeRide() {
 
 
 // -------------------------------
-// WALLET
-// -------------------------------
-
-function updateWallet() {
-
-  walletAmount.innerText =
-    wallet.toFixed(0);
-
-}
-
-
-updateWallet();
-
-
-// -------------------------------
 // NEXT RIDE
 // -------------------------------
 
@@ -743,7 +726,7 @@ nextRideBtn.addEventListener(
   function () {
 
 
-    // CANCEL ANIMATION
+    // STOP ANIMATION
 
     if (bikeAnimation) {
 
@@ -754,6 +737,72 @@ nextRideBtn.addEventListener(
       bikeAnimation = null;
 
     }
+
+
+    // REMOVE BIKE
+
+    if (bikeMarker) {
+
+      map.removeLayer(
+        bikeMarker
+      );
+
+      bikeMarker = null;
+
+    }
+
+
+    // REMOVE ROUTE
+
+    if (routeLine) {
+
+      map.removeLayer(
+        routeLine
+      );
+
+      routeLine = null;
+
+    }
+
+
+    // REMOVE PICKUP
+
+    if (pickupMarker) {
+
+      map.removeLayer(
+        pickupMarker
+      );
+
+      pickupMarker = null;
+
+    }
+
+
+    // REMOVE DESTINATION
+
+    if (destinationMarker) {
+
+      map.removeLayer(
+        destinationMarker
+      );
+
+      destinationMarker = null;
+
+    }
+
+
+    // RESET GAME
+
+    currentMode = "pickup";
+
+    rideAccepted = false;
+
+    currentFare = 0;
+
+
+    rideStatus.innerText =
+      "Waiting";
+
 
     distanceText.innerText =
       "-- km";
@@ -773,10 +822,8 @@ nextRideBtn.addEventListener(
     acceptRideBtn.hidden =
       false;
 
-
     acceptRideBtn.disabled =
       true;
-
 
     acceptRideBtn.innerText =
       "✅ Accept Ride";
@@ -784,7 +831,6 @@ nextRideBtn.addEventListener(
 
     startRideBtn.hidden =
       false;
-
 
     startRideBtn.disabled =
       true;
